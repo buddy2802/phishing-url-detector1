@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phishing URL Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>🔐 Phishing URL Detector</h1>
+    <p class="subtitle">Detection system for Malicious URLs</p>
+
+    <form action="/predict" method="post">
+        <input type="text" name="url" placeholder="Enter URL (e.g. https://example.com)" required>
+        <button type="button" onclick="handleSubmit()">Analyze</button>
+        <div id="loader" style="display:none;">
+        <p>🔍 Checking URL security...</p>
+        </div>
+        <div id="loader" class="loader"></div>
+    </form>
+
+    {% if prediction_text %}
+        <div class="result">
+            {% if confidence %}
+<p>Confidence: {{confidence}}%</p>
+{% endif %}
+            <h2>{{ prediction_text }}</h2>
+            {% if reasons %}
+            <h3>Why this result?</h3>
+            <ul>
+                {% for r in reasons %}
+                    <li>{{ r }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <h3>History</h3>
+            {% for h in history %}
+            <p>{{ h[0] }} → {{ h[1] }}</p>
+            {% endfor %}
+
+        </div>
+    {% endif %}
+</div>
+<script>
+function handleSubmit() {
+    var loader = document.getElementById("loader");
+
+    loader.style.display = "block";
+
+    // Delay form submission
+    setTimeout(function() {
+        document.forms[0].submit();
+    }, 2000);
+}
+</script>
+
+</body>
+</html>
